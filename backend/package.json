@@ -1,0 +1,31 @@
+{
+  "name": "servidor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha \"test/**/*.test.js\"",
+    "build": "tsc -w",
+    "dev": "nodemon src/build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.14.0",
+    "promise-mysql": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/morgan": "^1.9.9",
+    "chai": "^5.2.0",
+    "mocha": "^11.5.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.1"
+  }
+}

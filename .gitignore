@@ -1,0 +1,74 @@
+# =======================
+# GENERALES Y SISTEMA
+# =======================
+.DS_Store
+*.log
+*.swp
+*.pyc
+*.class
+
+# =======================
+# EDITORES Y ENTORNOS
+# =======================
+.idea/
+.vscode/
+.atom/
+.history
+.svn/
+*.iml
+*.ipr
+*.iws
+
+# =======================
+# FLUTTER / DART
+# =======================
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/pubspec.lock
+**/build/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/.generated/
+**/ios/Runner.xcworkspace/
+**/macos/Flutter/ephemeral/
+**/macos/Pods/
+**/macos/.generated/
+**/linux/flutter/ephemeral/
+**/windows/flutter/ephemeral/
+**/web/
+**/doc/api/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+
+# =======================
+# NODE.JS BACKEND
+# =======================
+backend/node_modules/
+backend/dist/
+backend/build/
+backend/.env
+backend/pnpm-lock.yaml
+
+# =======================
+# ANGULAR O OTRO FRONTEND JS (SI LO USAS)
+# =======================
+.angular/
+src/environments/
+frontend/pnpm-lock.yaml
+
+# =======================
+# OTROS
+# =======================
+app.*.symbols
+app.*.map.json
+mysql/
+migrate_working_dir/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
