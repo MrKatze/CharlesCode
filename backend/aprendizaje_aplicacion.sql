@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
   `nombre` text NOT NULL,
   `usuario` text NOT NULL,
+  `correo` text NOT NULL,
   `password` text NOT NULL,
-  `rol` text NOT NULL,
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
