@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../models/usuario.dart';
 import '/screens/modal_lenguaje/modal_lenguaje_screen.dart';
-import '/screens/lesson/lesson_controller.dart';
+import '../lesson/lesson_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -53,7 +53,9 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
                       child: Row(
                         children: const [
                           Icon(Icons.code, size: 32, color: Colors.blue),
@@ -61,11 +63,16 @@ class HomeScreen extends StatelessWidget {
                           Text(
                             'Python',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Spacer(),
-                          Icon(Icons.check_circle_outline,
-                              size: 24, color: Colors.white),
+                          Icon(
+                            Icons.check_circle_outline,
+                            size: 24,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -79,25 +86,36 @@ class HomeScreen extends StatelessWidget {
                   ),
                   elevation: 4,
                   child: InkWell(
-                    onTap: () =>
-                        mostrarInfoLenguajeModal(context, 'Flutter (Dart)'),
+                    onTap:
+                        () =>
+                            mostrarInfoLenguajeModal(context, 'Flutter (Dart)'),
                     borderRadius: BorderRadius.circular(12),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
                       child: Row(
                         children: const [
-                          Icon(Icons.flutter_dash,
-                              size: 32, color: Colors.blue),
+                          Icon(
+                            Icons.flutter_dash,
+                            size: 32,
+                            color: Colors.blue,
+                          ),
                           SizedBox(width: 16),
                           Text(
                             'Flutter (Dart)',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Spacer(),
-                          Icon(Icons.check_circle_outline,
-                              size: 24, color: Colors.white),
+                          Icon(
+                            Icons.check_circle_outline,
+                            size: 24,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -112,7 +130,9 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const LessonScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const LessonScreen(),
+                    ),
                   );
                 },
                 child: const Text('Iniciar'),
