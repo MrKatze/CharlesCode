@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'screens/login/login_controller.dart';
 import 'screens/login/login_screen.dart';
 import 'screens/home/home_screen.dart';
+import 'screens/registro/registro_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (_) => const LoginScreen(),
           '/home': (_) => const HomeScreen(),
+          '/registro': (_) => const RegistroScreen(),
         },
       ),
     );

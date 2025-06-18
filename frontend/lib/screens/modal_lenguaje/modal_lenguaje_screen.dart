@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/services/temario_service.dart';  // Ajusta la ruta
-import '../../models//temario.dart';    // Ajusta la ruta
+import '../../core/services/temario_service.dart'; // Ajusta la ruta
+import '../../models/temario.dart'; // Ajusta la ruta
 
 void mostrarInfoLenguajeModal(BuildContext context, String nameLenguaje) {
   final servicio = LenguajeService();
@@ -19,9 +19,7 @@ void mostrarInfoLenguajeModal(BuildContext context, String nameLenguaje) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return SizedBox(
               height: 200,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             );
           }
 
@@ -72,19 +70,27 @@ void mostrarInfoLenguajeModal(BuildContext context, String nameLenguaje) {
                   const SizedBox(height: 16),
                   const Text(
                     'Temario:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Expanded(
                     child: ListView.builder(
                       itemCount: lenguajeData.temario.length,
-                      itemBuilder: (context, index) => ListTile(
-                        leading: const Icon(Icons.check_circle_outline, color: Colors.white),
-                        title: Text(
-                          lenguajeData.temario[index],
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
+                      itemBuilder:
+                          (context, index) => ListTile(
+                            leading: const Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.white,
+                            ),
+                            title: Text(
+                              lenguajeData.temario[index],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
                     ),
                   ),
                 ],
