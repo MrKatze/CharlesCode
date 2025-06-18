@@ -4,8 +4,12 @@ import 'screens/login/login_controller.dart';
 import 'screens/login/login_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/registro/registro_screen.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 
 void main() {
+  Gemini.init(
+    apiKey: 'AIzaSyBil1A_xmCzt5Q-XF5J3KcAFgyN0qOaDZs',
+  ); // Reemplaza con tu clave de API de Gemini
   runApp(const MyApp());
 }
 
