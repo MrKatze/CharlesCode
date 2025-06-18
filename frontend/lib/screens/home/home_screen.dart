@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../models/usuario.dart';
-import 'screens/modal_lenguaje/modal_lenguaje_screen.dart';
+import '/screens/modal_lenguaje/modal_lenguaje_screen.dart';
+import '/screens/lesson/lesson_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -13,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Bienvenido, ${usuario?.nombre ?? 'Usuario'}'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,11 +106,14 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
 
-            const Spacer(),
+            const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Aquí puedes añadir funcionalidad en el futuro
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LessonScreen()),
+                  );
                 },
                 child: const Text('Iniciar'),
               ),
