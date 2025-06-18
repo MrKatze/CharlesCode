@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 import usuariosRutas from './rutas/rutaUsuario';  // Asegúrate de que la ruta sea correcta
-
+import rutasTemario from './rutas/rutaTemario';
 // Importar todas tus rutas
 
 const app: Application = express();
@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Montaje de rutas
 app.use('/api/usuarios', usuariosRutas);
+app.use('/api/temas', rutasTemario);
 
 // Exportamos la app sin levantar el servidor (ideal para pruebas)
 export default app;
