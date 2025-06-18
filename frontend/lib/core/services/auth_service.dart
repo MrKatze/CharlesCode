@@ -4,10 +4,10 @@ import '../../models/usuario.dart';
 
 class AuthService {
   //final String baseUrl =
-     // 'http://192.168.1.35:3000/api/usuarios'; // Cambia por tu IP o dominio
+  // 'http://192.168.1.35:3000/api/usuarios'; // Cambia por tu IP o dominio
   final String baseUrl =
-      'http://localhost:3000/api/usuarios'; // Cambia por tu IP o dominio
-      
+      'http://192.168.1.102:3000/api/usuarios'; // Cambia por tu IP o dominio
+
   Future<Usuario?> login(String usuario, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
