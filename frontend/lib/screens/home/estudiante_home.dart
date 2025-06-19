@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:frontend/screens/actividades_screen.dart';
 import 'package:frontend/screens/lesson/lesson_screen.dart';
 import 'package:frontend/screens/login/login_screen.dart';  // Importamos la pantalla de login
+import '../../../models/usuario.dart';
+import '/screens/login/login_screen.dart';
+import '/screens/modal_lenguaje/modal_lenguaje_screen.dart';
+import '/screens/lesson/lesson_controller.dart';
 
 class EstudianteHomeScreen extends StatelessWidget {
   const EstudianteHomeScreen({super.key});
 
-  @override
+  @override n
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
