@@ -133,6 +133,8 @@ public async obtenerRespuestasPorAlumno(req: Request, res: Response): Promise<vo
   try {
     const { id_alumno } = req.params;
 
+
+    // Traemos las respuestas junto con el título y la descripción de la actividad
     const [respuestas]: any = await pool.query(
       `SELECT r.*, a.titulo, a.descripcion, a.fecha_entrega
        FROM respuestas_actividades r
@@ -157,6 +159,90 @@ public async obtenerRespuestasPorAlumno(req: Request, res: Response): Promise<vo
     });
   }
 }
+
+public async calificarRespuesta(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params; // id de la respuesta
+    const { calificacion, comentario_maestro } = req.body;
+
+    // Validar que calificacion sea número entre 0 y 10 si quieres validar
+
+    const [result] = await pool.query(
+      `UPDATE respuestas_actividades
+       SET calificacion = ?, comentario_maestro = ?
+       WHERE id = ?`,
+      [calificacion, comentario_maestro, id]
+    );
+
+    if ((result as any).affectedRows > 0) {
+      res.status(200).json({
+        success: true,
+        message: 'Calificación y comentario actualizados correctamente',
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'No se encontró la respuesta para actualizar',
+      });
+    }
+  } catch (error) {
+    console.error('Error al actualizar calificación:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno al actualizar la calificación',
+    });
+  }
+}
+
+public async modificarActividad(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { titulo, descripcion, fecha_entrega, id_maestro, id_lenguaje } = req.body;
+
+    // Validación rápida
+    if (!titulo || !descripcion || !id_maestro || !id_lenguaje) {
+      res.status(400).json({
+        success: false,
+        statusCode: 400,
+        message: 'Faltan campos obligatorios',
+        data: null
+      });
+      return;
+    }
+
+    const [resultado]: any = await pool.query(
+      `UPDATE actividades 
+       SET titulo = ?, descripcion = ?, fecha_entrega = ?, id_maestro = ?, id_lenguaje = ?
+       WHERE id = ?`,
+      [titulo, descripcion, fecha_entrega || null, id_maestro, id_lenguaje, id]
+    );
+
+    if (resultado.affectedRows > 0) {
+      res.status(200).json({
+        success: true,
+        statusCode: 200,
+        message: 'Actividad actualizada correctamente',
+        data: { id }
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        statusCode: 404,
+        message: 'No se encontró la actividad para actualizar',
+        data: null
+      });
+    }
+  } catch (error) {
+    console.error('Error al modificar actividad:', error);
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: 'Error interno al modificar la actividad',
+      data: null
+    });
+  }
+}
+
 
 }
 

@@ -3,8 +3,8 @@ class RespuestaActividad {
   final int idActividad;
   final int idAlumno;
   final String respuesta;
-  final double? calificacion;
-  final String? comentarioMaestro;
+  double? calificacion;
+  String? comentarioMaestro;
   final DateTime fechaRespuesta;
   final String titulo;
   final String descripcion;
@@ -29,12 +29,16 @@ class RespuestaActividad {
       idActividad: json['id_actividad'],
       idAlumno: json['id_alumno'],
       respuesta: json['respuesta'],
-      calificacion: json['calificacion'] != null ? (json['calificacion'] as num).toDouble() : null,
+      calificacion: json['calificacion'] != null
+          ? double.tryParse(json['calificacion'].toString())
+          : null,
       comentarioMaestro: json['comentario_maestro'],
       fechaRespuesta: DateTime.parse(json['fecha_respuesta']),
       titulo: json['titulo'],
       descripcion: json['descripcion'],
-      fechaEntrega: json['fecha_entrega'] != null ? DateTime.parse(json['fecha_entrega']) : null,
+      fechaEntrega: json['fecha_entrega'] != null
+          ? DateTime.parse(json['fecha_entrega'])
+          : null,
     );
   }
 }

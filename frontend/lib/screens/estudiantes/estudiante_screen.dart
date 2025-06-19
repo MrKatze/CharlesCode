@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../models/usuario.dart';
 import '/core/services/auth_service.dart';
-import 'screens/estudiantes/detalle_estudiante_screen.dart';
+import '/screens/estudiantes/detalle_estudiante_screen.dart';
 
 
 class ScreenStudents extends StatefulWidget {
@@ -56,7 +56,7 @@ class _ScreenStudentsState extends State<ScreenStudents> {
                   return ListTile(
                     leading: const Icon(Icons.person),
                     title: Text(estudiante.nombre),
-                    subtitle: const Text('Progreso: 70%'),
+
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
                     Navigator.push(
