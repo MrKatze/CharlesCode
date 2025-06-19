@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../models/usuario.dart';
 import '/screens/login/login_screen.dart';
 import '/screens/estudiantes/estudiante_screen.dart';
+//import '/screens/actividades/crear_actividad_screen.dart';
+import '/screens/actividades/actividades_screen.dart';
 
 class MaestroHome extends StatelessWidget {
   final Usuario usuario;
@@ -50,25 +52,15 @@ class MaestroHome extends StatelessWidget {
               icon: Icons.code,
               label: 'Actividades Python',
               onTap: () {
-                // TODO
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ActividadesScreen(maestro: usuario),
+                  ),
+                );
               },
             ),
-            const SizedBox(height: 12),
-            MaestroCard(
-              icon: Icons.flutter_dash,
-              label: 'Actividades Flutter',
-              onTap: () {
-                // TODO
-              },
-            ),
-            const SizedBox(height: 12),
-            MaestroCard(
-              icon: Icons.add_circle_outline,
-              label: 'Crear nueva actividad',
-              onTap: () {
-                // TODO
-              },
-            ),
+            // Aquí ya no está el botón para crear actividad
           ],
         ),
       ),

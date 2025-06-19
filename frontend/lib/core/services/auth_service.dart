@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../models/usuario.dart';
+import 'package:myapp/models/usuario.dart';
 
 class AuthService {
   final String baseUrl =
-      'http://192.168.1.102:3000/api/usuarios'; // Cambia por tu IP o dominio
+      'http://localhost:3000/api/usuarios'; // Cambia por tu IP o dominio
 
   Future<Usuario?> login(String usuario, String password) async {
     final response = await http.post(
@@ -18,6 +18,23 @@ class AuthService {
       return Usuario.fromJson(body['data']);
     } else {
       return null;
+    }
+  }
+
+  Future<List<Usuario>> obtenerEstudiantes() async {
+    final response = await http.get(Uri.parse('$baseUrl/'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List usuarios = data['data'];
+
+      return usuarios
+          .map((json) => Usuario.fromJson(json))
+          .toList()
+          .where((u) => u.rol == 'Estudiante') // por si acaso
+          .toList();
+    } else {
+      throw Exception('Error al obtener estudiantes');
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../models/usuario.dart';
-import '/screens/login/logi_screen.dart';
+import '/screens/login/login_screen.dart';
 import '/screens/modal_lenguaje/modal_lenguaje_screen.dart';
 import '/screens/lesson/lesson_controller.dart';
 
