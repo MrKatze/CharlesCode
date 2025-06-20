@@ -16,28 +16,28 @@ Proyecto final de Desarrollo de aplicaciones moviles.
 ## 🖼️ Capturas de Pantalla
 
 ### 🔐 Pantalla de Login
-![Login](frontend/assets/img/screenshots/login.jpeg)
+![Login](frontend/assets/screenshots/login.jpeg)
 
 ### 🏠 Home del Estudiante
-![Estudiante Home](frontend/assets/img/screenshots/estudiante_home.jpeg)
+![Estudiante Home](frontend/assets/screenshots/estudiante_home.jpeg)
 
 ### 📚 Lecciones
-![Lecciones](frontend/assets/img/screenshots/lecciones.jpeg)
+![Lecciones](frontend/assets/screenshots/lecciones.jpeg)
 
 ### ❓ Cuestionario
-![Cuestionario](frontend/assets/img/screenshots/cuestionario.jpeg)
+![Cuestionario](frontend/assets/screenshots/cuestionario.jpeg)
 
 ### 📊 Estadísticas del Alumno
-![Estadísticas](frontend/assets/img/screenshots/estadisticas.jpeg)
+![Estadísticas](frontend/assets/screenshots/estadisticas.jpeg)
 
 ### 👨‍🏫 Home del Profesor
-![Home Profesor](frontend/assets/img/screenshots/home_profesor.jpeg)
+![Home Profesor](frontend/assets/screenshots/home_profesor.jpeg)
 
 ### 👨‍🎓 Lista de Alumnos
-![Alumnos](frontend/assets/img/screenshots/alumnos.jpeg)
+![Alumnos](frontend/assets/screenshots/alumnos.jpeg)
 
 ### 📄 Detalle del Alumno
-![Detalle Alumno](frontend/assets/img/screenshots/detalle_alumno.jpeg)
+![Detalle Alumno](frontend/assets/screenshots/detalle_alumno.jpeg)
 
 ### 📝 Actividades del Profesor
-![Actividades Profesor](frontend/assets/img/screenshots/actividades_profesor.jpeg)
+![Actividades Profesor](frontend/assets/screenshots/actividades_profesor.jpeg)
