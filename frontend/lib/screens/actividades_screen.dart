@@ -10,19 +10,22 @@ class ActivitiesScreen extends StatefulWidget {
   _ActivitiesScreenState createState() => _ActivitiesScreenState();
 }
 
-class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProviderStateMixin {
+class _ActivitiesScreenState extends State<ActivitiesScreen>
+    with TickerProviderStateMixin {
   String _question = '';
   List<String> _options = [];
   String? _selectedAnswer;
   String? _feedback;
 
-  int _activityIndex = 0;  // Índice para llevar el control de la actividad actual
+  int _activityIndex =
+      0; // Índice para llevar el control de la actividad actual
   int _correctAnswers = 0; // Contador de respuestas correctas
-  List<String> _correctAnswersList = []; // Lista de respuestas correctas
+  final List<String> _correctAnswersList = []; // Lista de respuestas correctas
 
   // Variable para controlar la visibilidad del botón "Verificar Respuesta"
   bool _isActivityGenerated = false;
-  bool _isCompleted = false; // Variable para indicar si se han completado todas las actividades
+  bool _isCompleted =
+      false; // Variable para indicar si se han completado todas las actividades
 
   // Animaciones
   late AnimationController _controller;
@@ -38,10 +41,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
       vsync: this,
     );
 
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // Empezar la animación inmediatamente
     _controller.forward();
@@ -71,10 +74,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
       print('Enviando solicitud a Gemini...');
       final response = await Gemini.instance.text(prompt);
       print('Respuesta de actividades recibida: $response');
-     
+
       if (response != null && response.content != null) {
         final content = response.content;
-       
+
         // Extraemos la pregunta y las opciones de respuesta
         setState(() {
           _question = _extractTextFromParts(content?.parts);
@@ -83,7 +86,9 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
 
         // Agregar la respuesta correcta a la lista
         if (_options.isNotEmpty) {
-          _correctAnswersList.add(_options.first);  // La respuesta correcta es la primera opción
+          _correctAnswersList.add(
+            _options.first,
+          ); // La respuesta correcta es la primera opción
         }
       } else {
         setState(() {
@@ -108,13 +113,17 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
         // Eliminar el texto de "Opciones:" y cualquier cosa que venga después
         final optionsIndex = text.indexOf('Opciones:');
         if (optionsIndex != -1) {
-          text = text.substring(0, optionsIndex).trim();  // Queda solo la pregunta
+          text =
+              text.substring(0, optionsIndex).trim(); // Queda solo la pregunta
         }
 
         // Eliminar la línea de "Respuesta correcta:" y todo lo que siga
         final answerIndex = text.indexOf('Respuesta correcta:');
         if (answerIndex != -1) {
-          text = text.substring(0, answerIndex).trim();  // Quita la respuesta correcta
+          text =
+              text
+                  .substring(0, answerIndex)
+                  .trim(); // Quita la respuesta correcta
         }
 
         return text; // Regresa solo la pregunta sin opciones ni respuesta correcta
@@ -130,12 +139,14 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
     for (var part in parts) {
       if (part is TextPart) {
         String text = part.text ?? '';
-       
+
         // Buscamos las opciones dentro de la respuesta estructurada
         final optionPattern = RegExp(r'\b[a-d]\)\s*([^\n]+)');
         final matches = optionPattern.allMatches(text);
         for (var match in matches) {
-          options.add(match.group(1)!);  // Extraemos las opciones y las agregamos a la lista
+          options.add(
+            match.group(1)!,
+          ); // Extraemos las opciones y las agregamos a la lista
         }
       }
     }
@@ -149,7 +160,8 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
         _correctAnswers++; // Aumentamos el contador de respuestas correctas
         _feedback = '¡Correcto! ¡Bien hecho!';
       } else {
-        _feedback = 'Incorrecto. La respuesta correcta es: ${_correctAnswersList[_activityIndex]}';
+        _feedback =
+            'Incorrecto. La respuesta correcta es: ${_correctAnswersList[_activityIndex]}';
       }
     });
 
@@ -184,18 +196,19 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Resultado Final'),
-        content: Text(resultMessage),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Aceptar'),
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Resultado Final'),
+            content: Text(resultMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Aceptar'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -217,10 +230,13 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.topic), // Aquí cambia el título según el tema seleccionado
+        title: Text(
+          widget.topic,
+        ), // Aquí cambia el título según el tema seleccionado
         backgroundColor: Colors.deepPurple,
       ),
-      body: SingleChildScrollView(  // Hacemos la pantalla desplazable
+      body: SingleChildScrollView(
+        // Hacemos la pantalla desplazable
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,7 +247,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
               opacity: _animation,
               child: const Text(
                 'Presiona "Generar actividad" para obtener 5 actividades sobre el tema seleccionado y responderlas. ¡Veamos qué tanto sabes!',
-                style: TextStyle(fontSize: 16, color: Colors.red), // Texto de instrucciones en rojo
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.red,
+                ), // Texto de instrucciones en rojo
               ),
             ),
             const SizedBox(height: 20),
@@ -241,10 +260,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
               opacity: _animation,
               child: ElevatedButton(
                 onPressed: _generateActivity,
-                child: const Text('Generar actividad'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // Color del botón de generar
                 ),
+                child: const Text('Generar actividad'),
               ),
             ),
             const SizedBox(height: 20),
@@ -255,20 +274,29 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _question,  // Muestra solo la pregunta sin respuesta correcta
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white), // Actividad en blanco
+                    _question, // Muestra solo la pregunta sin respuesta correcta
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ), // Actividad en blanco
                   ),
                   const SizedBox(height: 20),
-                  ..._options.map((option) => RadioListTile<String>(
-                        title: Text(option, style: const TextStyle(color: Colors.white)), // Opciones en blanco
-                        value: option,
-                        groupValue: _selectedAnswer,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedAnswer = value;
-                          });
-                        },
-                      )),
+                  ..._options.map(
+                    (option) => RadioListTile<String>(
+                      title: Text(
+                        option,
+                        style: const TextStyle(color: Colors.white),
+                      ), // Opciones en blanco
+                      value: option,
+                      groupValue: _selectedAnswer,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedAnswer = value;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               ),
             const SizedBox(height: 20),
@@ -279,10 +307,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
                 opacity: _animation,
                 child: ElevatedButton(
                   onPressed: _checkAnswer,
-                  child: const Text('Verificar Respuesta'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, // Color del botón de verificar
+                    backgroundColor:
+                        Colors.green, // Color del botón de verificar
                   ),
+                  child: const Text('Verificar Respuesta'),
                 ),
               ),
             const SizedBox(height: 20),
@@ -292,7 +321,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
               Text(
                 _feedback!,
                 style: TextStyle(
-                  color: _feedback!.contains('Correcto') ? Colors.green : Colors.red,
+                  color:
+                      _feedback!.contains('Correcto')
+                          ? Colors.green
+                          : Colors.red,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -302,10 +334,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> with TickerProvider
             if (_isCompleted)
               ElevatedButton(
                 onPressed: _restartActivities,
-                child: const Text('Reiniciar actividades'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange, // Color del botón de reiniciar
+                  backgroundColor:
+                      Colors.orange, // Color del botón de reiniciar
                 ),
+                child: const Text('Reiniciar actividades'),
               ),
           ],
         ),

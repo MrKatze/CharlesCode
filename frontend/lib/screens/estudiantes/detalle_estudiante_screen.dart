@@ -73,6 +73,11 @@ class _DetalleEstudianteScreenState extends State<DetalleEstudianteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Separar actividades contestadas y no contestadas
+    final contestadas =
+        respuestas.where((a) => (a.respuesta ?? '').isNotEmpty).toList();
+    final noContestadas =
+        respuestas.where((a) => (a.respuesta ?? '').isEmpty).toList();
     return Scaffold(
       appBar: AppBar(title: Text('Progreso de ${widget.estudiante.nombre}')),
       body: Padding(
@@ -94,55 +99,90 @@ class _DetalleEstudianteScreenState extends State<DetalleEstudianteScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      'Actividades calificadas:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Actividades contestadas:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: () => _mostrarGrafica(context),
+                          icon: const Icon(Icons.bar_chart),
+                          label: const Text('Ver gráfica'),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: respuestas.length,
-                        itemBuilder: (context, index) {
-                          final actividad = respuestas[index];
-                          final fechaEntrega =
-                              actividad.fechaEntrega ?? DateTime.now();
-                          final fechaRespuesta = actividad.fechaRespuesta;
-                          final bool aTiempo =
-                              fechaRespuesta.isBefore(fechaEntrega) ||
-                              fechaRespuesta.isAtSameMomentAs(fechaEntrega);
-
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
-                                color: aTiempo ? Colors.green : Colors.red,
-                                width: 2,
+                      child: ListView(
+                        children: [
+                          ...contestadas.map(
+                            (actividad) => Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ListTile(
+                                leading: const Icon(
+                                  Icons.assignment_turned_in,
+                                  color: Colors.green,
+                                ),
+                                title: Text(actividad.titulo),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Respuesta: ${actividad.respuesta ?? ''}',
+                                    ),
+                                    Text(
+                                      'Calificación: ${actividad.calificacion?.toString() ?? 'Sin calificar'}',
+                                    ),
+                                    Text(
+                                      'Comentario: ${actividad.comentarioMaestro ?? ''}',
+                                    ),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed:
+                                      () => _mostrarDetalleActividad(
+                                        context,
+                                        actividad,
+                                      ),
+                                ),
                               ),
                             ),
-                            child: ListTile(
-                              leading: const Icon(Icons.assignment),
-                              title: Text(actividad.titulo),
-                              trailing: const Icon(Icons.edit),
-                              onTap:
-                                  () => _mostrarDetalleActividad(
-                                    context,
-                                    actividad,
-                                  ),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Actividades no contestadas:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
-                          );
-                        },
+                          ),
+                          ...noContestadas.map(
+                            (actividad) => Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ListTile(
+                                leading: const Icon(
+                                  Icons.assignment_late,
+                                  color: Colors.red,
+                                ),
+                                title: Text(actividad.titulo),
+                                subtitle: const Text('Sin respuesta'),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _mostrarGrafica(context),
-        label: const Text('Ver gráfica'),
-        icon: const Icon(Icons.bar_chart),
       ),
     );
   }
@@ -157,7 +197,7 @@ class _DetalleEstudianteScreenState extends State<DetalleEstudianteScreen> {
     final comentarioController = TextEditingController(
       text: actividad.comentarioMaestro ?? '',
     );
-
+    final respuestaController = TextEditingController();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -175,98 +215,160 @@ class _DetalleEstudianteScreenState extends State<DetalleEstudianteScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Descripción de la actividad:',
+                    'Título: ${actividad.titulo}',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 5),
-                  Text(actividad.descripcion),
-                  const SizedBox(height: 15),
+                  Text('Descripción: ${actividad.descripcion}'),
+                  const SizedBox(height: 5),
                   Text(
-                    'Respuesta del alumno:',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    'Fecha de entrega: ${actividad.fechaEntrega?.toString().split(' ')[0] ?? 'Sin fecha'}',
                   ),
-                  const SizedBox(height: 10),
-                  Text(actividad.respuesta),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: calificacionController,
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: true,
+                  const SizedBox(height: 15),
+                  if ((actividad.respuesta ?? '').isNotEmpty) ...[
+                    Text(
+                      'Respuesta del alumno:',
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                      CalificacionInputFormatter(),
-                    ],
-                    decoration: const InputDecoration(
-                      labelText: 'Calificación (máx 10)',
-                      border: OutlineInputBorder(),
+                    const SizedBox(height: 10),
+                    Text(actividad.respuesta),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: calificacionController,
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                        CalificacionInputFormatter(),
+                      ],
+                      decoration: const InputDecoration(
+                        labelText: 'Calificación (máx 10)',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: comentarioController,
-                    maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: 'Comentario del maestro',
-                      border: OutlineInputBorder(),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: comentarioController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                        labelText: 'Comentario del maestro',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    child: const Text('Guardar'),
-                    onPressed: () async {
-                      final nuevaCalificacion = double.tryParse(
-                        calificacionController.text,
-                      );
-                      final nuevoComentario = comentarioController.text;
-
-                      if (nuevaCalificacion == null ||
-                          nuevaCalificacion < 0 ||
-                          nuevaCalificacion > 10) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Ingresa una calificación válida entre 0 y 10',
-                            ),
-                          ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      child: const Text('Guardar calificación'),
+                      onPressed: () async {
+                        final nuevaCalificacion = double.tryParse(
+                          calificacionController.text,
                         );
-                        return;
-                      }
-
-                      final exito =
-                          await ActividadService.actualizarCalificacionRespuesta(
-                            idRespuesta: actividad.id,
-                            calificacion: nuevaCalificacion,
-                            comentarioMaestro: nuevoComentario,
+                        final nuevoComentario = comentarioController.text;
+                        if (nuevaCalificacion == null ||
+                            nuevaCalificacion < 0 ||
+                            nuevaCalificacion > 10) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Ingresa una calificación válida entre 0 y 10',
+                              ),
+                            ),
                           );
-
-                      if (!mounted) return;
-
-                      if (exito) {
-                        setState(() {
-                          actividad.calificacion = nuevaCalificacion;
-                          actividad.comentarioMaestro = nuevoComentario;
-                        });
-
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Calificación y comentario actualizados',
+                          return;
+                        }
+                        if (actividad.id == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'No se puede calificar una actividad sin respuesta.',
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Error al actualizar la calificación',
+                          );
+                          return;
+                        }
+                        final exito =
+                            await ActividadService.actualizarCalificacionRespuesta(
+                              idRespuesta: actividad.id!,
+                              calificacion: nuevaCalificacion,
+                              comentarioMaestro: nuevoComentario,
+                            );
+                        if (!mounted) return;
+                        if (exito) {
+                          setState(() {
+                            actividad.calificacion = nuevaCalificacion;
+                            actividad.comentarioMaestro = nuevoComentario;
+                          });
+                          Navigator.pop(context);
+                          _cargarRespuestas();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Calificación y comentario actualizados',
+                              ),
                             ),
-                          ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Error al actualizar la calificación',
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ] else ...[
+                    const SizedBox(height: 10),
+                    Text('El alumno no ha respondido esta actividad.'),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: respuestaController,
+                      maxLines: 10,
+                      decoration: const InputDecoration(
+                        labelText: 'Respuesta del alumno',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      child: const Text('Enviar respuesta como alumno'),
+                      onPressed: () async {
+                        final respuesta = respuestaController.text.trim();
+                        if (respuesta.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'La respuesta no puede estar vacía',
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        final exito = await ActividadService.enviarRespuesta(
+                          actividad.idActividad,
+                          actividad.idAlumno,
+                          respuesta,
                         );
-                      }
-                    },
-                  ),
+                        if (!mounted) return;
+                        if (exito) {
+                          Navigator.pop(context);
+                          _cargarRespuestas();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Respuesta enviada exitosamente'),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Error al enviar respuesta'),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
                   const SizedBox(height: 16),
                 ],
               ),

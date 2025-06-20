@@ -153,8 +153,9 @@ class RegistroScreen extends StatelessWidget {
                                   ScaffoldMessenger.of(
                                     context,
                                   ).showSnackBar(snackBar);
-                                  if (exito && context.mounted)
+                                  if (exito && context.mounted) {
                                     Navigator.pop(context);
+                                  }
                                 },
                                 child: const Text(
                                   'Registrarse',

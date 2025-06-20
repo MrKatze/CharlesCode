@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 import '../../models/temario.dart'; // Ajusta ruta según tu proyecto
 
 class LenguajeService {
-  final String baseUrl = 'http://192.168.1.76:3000/api/temas'; // Cambia por tu URL
+  // final String baseUrl = 'http://192.168.1.76:3000/api/temas'; // Cambia por tu URL
+  final String baseUrl =
+      'http://192.168.1.102/api/usuarios'; // Cambia por tu IP o dominio
 
   Future<LenguajeTemario?> obtenerLenguajeTemario(String nombre) async {
     final url = Uri.parse('$baseUrl/$nombre');

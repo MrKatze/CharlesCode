@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:myapp/models/usuario.dart';
+import '../../models/usuario.dart';
 
 class AuthService {
   final String baseUrl =
-      'http://192.168.1.76:3000/api/usuarios'; // Cambia por tu IP o dominio
+      'http://192.168.1.102:3000/api/usuarios'; // Cambia por tu IP o dominio
   // 'http://localhost:3000/api/usuarios'; // Cambia por tu IP o dominio
 
   Future<Usuario?> login(String usuario, String password) async {

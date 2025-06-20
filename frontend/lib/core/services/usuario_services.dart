@@ -4,8 +4,10 @@ import 'package:http/http.dart' as http;
 import '../../models/usuario.dart';
 
 class UsuarioServices {
-  static const String _baseUrl =
-      'http://192.168.1.76:3000/api/usuarios'; // Ajusta la URL según tu backend
+  // static const String _baseUrl =
+  //     'http://192.168.1.76:3000/api/usuarios'; // Ajusta la URL según tu backend
+  static const _baseUrl =
+      'http://192.168.1.102:3000/api/usuarios'; // Cambia por tu IP o dominio
 
   static Future<bool> registrarUsuario(Usuario usuario) async {
     final response = await http.post(

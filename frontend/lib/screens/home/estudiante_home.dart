@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/actividades/actividades_estudiante_screen.dart';
 import 'package:frontend/screens/actividades_screen.dart';
 import 'package:frontend/screens/lesson/lesson_screen.dart';
-import 'package:frontend/screens/login/login_screen.dart';  // Importamos la pantalla de login
-import '../../../models/usuario.dart';
-import '/screens/login/login_screen.dart';
-import '/screens/modal_lenguaje/modal_lenguaje_screen.dart';
-import '/screens/lesson/lesson_controller.dart';
+import 'package:frontend/screens/login/login_screen.dart';
+import '../../models/usuario.dart';
 
 class EstudianteHomeScreen extends StatelessWidget {
-  const EstudianteHomeScreen({super.key});
+  final Usuario usuarioLogueado;
+  const EstudianteHomeScreen({super.key, required this.usuarioLogueado});
 
-  @override n
+  @override
   Widget build(BuildContext context) {
+    // Usa directamente usuarioLogueado, no intentes obtenerlo de ModalRoute
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bienvenido al área de estudiante'),
@@ -25,14 +25,32 @@ class EstudianteHomeScreen extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const LoginScreen(),  // Redirigimos a la pantalla de login
+                  builder:
+                      (context) =>
+                          const LoginScreen(), // Redirigimos a la pantalla de login
+                ),
+              );
+            },
+          ),
+          // Botón para ver actividades asignadas
+          IconButton(
+            icon: const Icon(Icons.assignment),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ActividadesEstudianteScreen(
+                        idEstudiante: usuarioLogueado.idUsuario,
+                      ),
                 ),
               );
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(  // Hacemos que la pantalla sea desplazable
+      body: SingleChildScrollView(
+        // Hacemos que la pantalla sea desplazable
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +59,7 @@ class EstudianteHomeScreen extends StatelessWidget {
             const Text(
               '¿Qué es la programación?',
               style: TextStyle(
-                fontSize: 24,  // Tamaño grande para el subtítulo
+                fontSize: 24, // Tamaño grande para el subtítulo
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 142, 255, 77),
               ),
@@ -51,9 +69,14 @@ class EstudianteHomeScreen extends StatelessWidget {
               'La programación es el proceso de diseñar y crear instrucciones que le indican a una computadora cómo realizar tareas. '
               'Es la base para crear aplicaciones, juegos, sitios web y mucho más.',
               style: TextStyle(
-                fontSize: 18,  // Tamaño de texto adecuado
-                color: Color.fromARGB(221, 255, 255, 255),  // Color negro para el texto
-                height: 1.5,  // Espaciado entre líneas
+                fontSize: 18, // Tamaño de texto adecuado
+                color: Color.fromARGB(
+                  221,
+                  255,
+                  255,
+                  255,
+                ), // Color negro para el texto
+                height: 1.5, // Espaciado entre líneas
               ),
             ),
             const SizedBox(height: 30),
@@ -62,7 +85,7 @@ class EstudianteHomeScreen extends StatelessWidget {
             const Text(
               'Python: ',
               style: TextStyle(
-                fontSize: 28,  // Título grande
+                fontSize: 28, // Título grande
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 142, 255, 77),
               ),
@@ -100,7 +123,10 @@ class EstudianteHomeScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ActivitiesScreen(topic: topic),  // Pasamos el tema a la pantalla de actividades
+              builder:
+                  (context) => ActivitiesScreen(
+                    topic: topic,
+                  ), // Pasamos el tema a la pantalla de actividades
             ),
           );
         },
@@ -111,7 +137,8 @@ class EstudianteHomeScreen extends StatelessWidget {
             children: [
               const Icon(Icons.code, size: 32, color: Colors.blue),
               const SizedBox(width: 16),
-              Expanded( // Esto ayuda a que el texto se ajuste al tamaño disponible
+              Expanded(
+                // Esto ayuda a que el texto se ajuste al tamaño disponible
                 child: Text(
                   topic,
                   style: const TextStyle(
@@ -119,8 +146,11 @@ class EstudianteHomeScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
-                  overflow: TextOverflow.visible,  // Permite el texto en varias líneas si es necesario
-                  maxLines: null,  // Permite que el texto ocupe tantas líneas como sea necesario
+                  overflow:
+                      TextOverflow
+                          .visible, // Permite el texto en varias líneas si es necesario
+                  maxLines:
+                      null, // Permite que el texto ocupe tantas líneas como sea necesario
                 ),
               ),
               const Icon(Icons.chevron_right, size: 24, color: Colors.white),
@@ -143,7 +173,9 @@ class EstudianteHomeScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const LessonScreen(),  // Aquí redirigimos a la pantalla de lecciones
+              builder:
+                  (context) =>
+                      const LessonScreen(), // Aquí redirigimos a la pantalla de lecciones
             ),
           );
         },
@@ -163,8 +195,11 @@ class EstudianteHomeScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
-                  overflow: TextOverflow.visible,  // Permite el texto en varias líneas si es necesario
-                  maxLines: null,  // Permite que el texto ocupe tantas líneas como sea necesario
+                  overflow:
+                      TextOverflow
+                          .visible, // Permite el texto en varias líneas si es necesario
+                  maxLines:
+                      null, // Permite que el texto ocupe tantas líneas como sea necesario
                 ),
               ),
               Spacer(),
