@@ -7,9 +7,7 @@ import 'screens/registro/registro_screen.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
 void main() {
-  Gemini.init(
-    apiKey: 'AIzaSyBil1A_xmCzt5Q-XF5J3KcAFgyN0qOaDZs',
-  ); // Reemplaza con tu clave de API de Gemini
+  Gemini.init(apiKey: 'AIzaSyBil1A_xmCzt5Q-XF5J3KcAFgyN0qOaDZs');
   runApp(const MyApp());
 }
 
@@ -22,7 +20,7 @@ class MyApp extends StatelessWidget {
       providers: [ChangeNotifierProvider(create: (_) => LoginController())],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'ChatiFy',
+        title: 'While (True)',
         theme: ThemeData.dark(),
         initialRoute: '/',
         routes: {

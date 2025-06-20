@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gemini/flutter_gemini.dart'; // Asegúrate de tener el paquete flutter_gemini
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:flutter_highlight/themes/vs2015.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   final String topic;
@@ -7,6 +9,7 @@ class ActivitiesScreen extends StatefulWidget {
   const ActivitiesScreen({super.key, required this.topic});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ActivitiesScreenState createState() => _ActivitiesScreenState();
 }
 
@@ -31,6 +34,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen>
   late AnimationController _controller;
   late Animation<double> _animation;
 
+  // NUEVO: Estado para la explicación del tema
+  String? _topicExplanation;
+  bool _isLoadingExplanation = true;
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +55,133 @@ class _ActivitiesScreenState extends State<ActivitiesScreen>
 
     // Empezar la animación inmediatamente
     _controller.forward();
+
+    _fetchTopicExplanation(); // Obtener explicación al iniciar
+  }
+
+  // NUEVO: Obtener explicación detallada del tema desde Gemini
+  Future<void> _fetchTopicExplanation() async {
+    setState(() {
+      _isLoadingExplanation = true;
+    });
+    final prompt =
+        'Explica de forma detallada, clara y sencilla el siguiente tema de programación, usando ejemplos de código si es relevante. Si das código, ponlo en un bloque Markdown: ${widget.topic}';
+    try {
+      final response = await Gemini.instance.text(prompt);
+      if (response != null && response.content != null) {
+        String? explanation;
+        final parts = response.content!.parts;
+        if (parts != null && parts.isNotEmpty) {
+          final part = parts.first;
+          if (part is TextPart) {
+            explanation = part.text;
+          } else {
+            explanation = part.toString(); // fallback
+          }
+        }
+        setState(() {
+          _topicExplanation = explanation ?? '';
+          _isLoadingExplanation = false;
+        });
+      } else {
+        setState(() {
+          _topicExplanation = 'No se pudo obtener la explicación.';
+          _isLoadingExplanation = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _topicExplanation = 'Error al obtener la explicación.';
+        _isLoadingExplanation = false;
+      });
+    }
+  }
+
+  // NUEVO: Widget para mostrar explicación con bloques de código resaltados
+  Widget _buildExplanationWidget() {
+    if (_isLoadingExplanation) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (_topicExplanation == null || _topicExplanation!.isEmpty) {
+      return const Text('No hay explicación disponible.');
+    }
+    // Buscar bloques de código en Markdown (```)
+    final codeRegExp = RegExp(r'```([a-zA-Z]*)\n([\s\S]*?)```');
+    final matches = codeRegExp.allMatches(_topicExplanation!);
+    if (matches.isEmpty) {
+      // Solo texto, sin bloques de código
+      return Container(
+        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 24),
+        decoration: BoxDecoration(
+          color: Colors.deepPurple.shade900.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          _topicExplanation!,
+          style: const TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      );
+    }
+    // Si hay bloques de código, dividir el texto y mostrar con highlight
+    List<Widget> children = [];
+    int lastEnd = 0;
+    for (final match in matches) {
+      if (match.start > lastEnd) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              _topicExplanation!.substring(lastEnd, match.start),
+              style: const TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ),
+        );
+      }
+      final language = match.group(1) ?? 'python';
+      final code = match.group(2) ?? '';
+      children.add(
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: HighlightView(
+            code,
+            language: language.isEmpty ? 'python' : language,
+            theme: vs2015Theme,
+            padding: const EdgeInsets.all(12),
+            textStyle: const TextStyle(fontFamily: 'Fira Mono', fontSize: 15),
+          ),
+        ),
+      );
+      lastEnd = match.end;
+    }
+    if (lastEnd < _topicExplanation!.length) {
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Text(
+            _topicExplanation!.substring(lastEnd),
+            style: const TextStyle(fontSize: 16, color: Colors.white),
+          ),
+        ),
+      );
+    }
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 24),
+      decoration: BoxDecoration(
+        color: Colors.deepPurple.shade900.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
+    );
   }
 
   // Función para generar actividades dinámicas con una estructura clara
@@ -241,6 +375,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 10),
+            // Mostrar explicación antes del cuestionario
+            _buildExplanationWidget(),
+            const SizedBox(height: 10),
             // Instrucción al estudiante
             const SizedBox(height: 20),
             FadeTransition(

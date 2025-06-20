@@ -5,7 +5,7 @@ import cors from 'cors';
 import usuariosRutas from './rutas/rutaUsuario';  // Asegúrate de que la ruta sea correcta
 import rutasTemario from './rutas/rutaTemario';
 import actividadesRoutes from './rutas/rutasActividades';
-// Importar todas tus rutas
+import rutaEstadisticas from './rutas/rutaEstadisticas'; // <-- Agregar import de estadísticas
 
 const app: Application = express();
 
@@ -19,5 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/usuarios', usuariosRutas);
 app.use('/api/temas', rutasTemario);
 app.use('/api/actividades', actividadesRoutes);
+app.use('/api/estadisticas', rutaEstadisticas); // <-- Agregar ruta de estadísticas
+
 // Exportamos la app sin levantar el servidor (ideal para pruebas)
 export default app;

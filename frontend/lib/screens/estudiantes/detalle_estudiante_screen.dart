@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:flutter_highlight/themes/vs2015.dart';
 import '../../../models/usuario.dart';
 import '../../../models/respuestas.dart'; // importa tu modelo
 import '../../core/services/actividades_service.dart'; // importa tu servicio
@@ -133,9 +135,25 @@ class _DetalleEstudianteScreenState extends State<DetalleEstudianteScreen> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Respuesta: ${actividad.respuesta ?? ''}',
+                                    Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: HighlightView(
+                                        actividad.respuesta,
+                                        language: 'python',
+                                        theme: vs2015Theme, // Tema oscuro
+                                        padding: const EdgeInsets.all(8),
+                                        textStyle: const TextStyle(
+                                          fontFamily: 'Fira Mono',
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                     ),
+                                    const SizedBox(height: 20),
                                     Text(
                                       'Calificación: ${actividad.calificacion?.toString() ?? 'Sin calificar'}',
                                     ),
@@ -231,7 +249,24 @@ class _DetalleEstudianteScreenState extends State<DetalleEstudianteScreen> {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 10),
-                    Text(actividad.respuesta),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: HighlightView(
+                        actividad.respuesta,
+                        language: 'python',
+                        theme: vs2015Theme, // Tema oscuro
+                        padding: const EdgeInsets.all(8),
+                        textStyle: const TextStyle(
+                          fontFamily: 'Fira Mono',
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     TextField(
                       controller: calificacionController,

@@ -4,6 +4,7 @@ import '/screens/login/login_screen.dart';
 import '/screens/estudiantes/estudiante_screen.dart';
 //import '/screens/actividades/crear_actividad_screen.dart';
 import '/screens/actividades/actividades_screen.dart';
+import '../estadisticas/estadisticas_screen.dart';
 
 class MaestroHome extends StatelessWidget {
   final Usuario usuario;
@@ -60,7 +61,20 @@ class MaestroHome extends StatelessWidget {
                 );
               },
             ),
-            // Aquí ya no está el botón para crear actividad
+            const SizedBox(height: 12),
+            MaestroCard(
+              icon: Icons.bar_chart,
+              label: 'Estadísticas de alumnos',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EstadisticasScreen(maestro: usuario),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
           ],
         ),
       ),

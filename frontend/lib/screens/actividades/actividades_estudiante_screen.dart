@@ -52,7 +52,7 @@ class _ActividadesEstudianteScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mis actividades debugueando')),
+      appBar: AppBar(title: const Text('Mis actividades')),
       body: FutureBuilder<List<RespuestaActividad>>(
         future: _actividadesFuture,
         builder: (context, snapshot) {
@@ -63,15 +63,28 @@ class _ActividadesEstudianteScreenState
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           final actividades = snapshot.data ?? [];
+          final now = DateTime.now();
           // SOLO considera contestadas las que tienen respuesta no vacía
           final contestadas =
               actividades
                   .where((a) => (a.respuesta ?? '').trim().isNotEmpty)
                   .toList();
+          // No contestadas y dentro de tiempo
           final noContestadas =
-              actividades
-                  .where((a) => (a.respuesta ?? '').trim().isEmpty)
-                  .toList();
+              actividades.where((a) {
+                final sinRespuesta = (a.respuesta ?? '').trim().isEmpty;
+                final fechaEntrega = a.fechaEntrega;
+                return sinRespuesta &&
+                    (fechaEntrega == null || fechaEntrega.isAfter(now));
+              }).toList();
+          // No contestadas y fuera de tiempo
+          final fueraDeTiempo =
+              actividades.where((a) {
+                final sinRespuesta = (a.respuesta ?? '').trim().isEmpty;
+                final fechaEntrega = a.fechaEntrega;
+                return sinRespuesta &&
+                    (fechaEntrega != null && fechaEntrega.isBefore(now));
+              }).toList();
           return ListView(
             children: [
               const Padding(
@@ -119,6 +132,8 @@ class _ActividadesEstudianteScreenState
                           _mostrarFormularioRespuesta(
                             context,
                             actividad.idActividad ?? 0,
+                            actividad.titulo,
+                            actividad.descripcion ?? '',
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -134,6 +149,38 @@ class _ActividadesEstudianteScreenState
                   ),
                 ),
               ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Actividades fuera de tiempo',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              ...fueraDeTiempo.map(
+                (actividad) => Card(
+                  color: Colors.red.withOpacity(
+                    0.15,
+                  ), // Fondo oscuro/transparente para modo oscuro
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.red, width: 1.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      actividad.titulo,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    subtitle: Text(
+                      'No has enviado respuesta\nFecha límite: ${actividad.fechaEntrega != null ? actividad.fechaEntrega!.toLocal().toString().split(' ')[0] : 'Sin fecha'}',
+                      style: const TextStyle(color: Colors.redAccent),
+                    ),
+                    trailing: const Icon(Icons.lock, color: Colors.red),
+                  ),
+                ),
+              ),
             ],
           );
         },
@@ -141,19 +188,37 @@ class _ActividadesEstudianteScreenState
     );
   }
 
-  void _mostrarFormularioRespuesta(BuildContext context, int idActividad) {
+  void _mostrarFormularioRespuesta(
+    BuildContext context,
+    int idActividad,
+    String titulo,
+    String descripcion,
+  ) {
     final respuestaController = TextEditingController();
     showDialog(
       context: context,
       builder:
           (_) => AlertDialog(
-            title: const Text('Enviar Respuesta'),
-            content: TextField(
-              controller: respuestaController,
-              maxLines: 10,
-              decoration: const InputDecoration(
-                labelText: 'Pega tu código aquí',
-                border: OutlineInputBorder(),
+            title: Text('Responder: $titulo'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    descripcion,
+                    style: const TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: respuestaController,
+                    maxLines: 10,
+                    decoration: const InputDecoration(
+                      labelText: 'Pega tu código aquí',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
               ),
             ),
             actions: [
